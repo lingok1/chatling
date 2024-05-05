@@ -17,19 +17,24 @@ class MyApp extends StatelessWidget {
 
 class ChatSearch extends StatefulWidget {
   @override
-  _SearchState createState() => _SearchState();
+  _ChatSearchState createState() => _ChatSearchState();
 }
 
-class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin {
+class _ChatSearchState extends State<ChatSearch> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> tabs = ['GLM', 'ChatGPT','Qwen',  'Kimi', 'Spark', 'qwen'];
+  final List<String> tabs = ['GLM', 'ChatGPT', 'Qwen', 'Kimi', 'Spark', 'qwen'];
   late TabController _tabController;
-  List<Map<String, dynamic>> messages = []; // 存储消息列表
+  // 使用映射来存储每个标签页的消息列表
+  final Map<String, List<Map<String, dynamic>>> messagesMap = {};
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
+    // 初始化每个标签页的消息列表
+    for (var tab in tabs) {
+      messagesMap[tab] = [];
+    }
   }
 
   @override
@@ -38,7 +43,7 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
-  void _search() async {
+  void _search(String currentTab) async {
     // 获取用户输入的内容
     String query = _searchController.text.trim();
 
@@ -47,52 +52,86 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
       // 模拟搜索逻辑，使用dio发送网络请求
       // 请自行处理token和dio初始化
       final dio = Dio();
-      // 这里应该是您发送请求的代码，以下代码仅作示例
-      final response =
-          await dio.post('http://okgo.pro:8000/v1/chat/completions',
-              data: {
-                // ...构建请求的JSON数据
-                "model": "glm4",
-                // "conversation_id": "663094b7e9b6f0caae621992",
-                "messages": [
-                  // ...之前的messages
-                  {"role": "user", "content": _searchController.text}
-                ],
-                "stream": false
-              },
-              options: Options(headers: {
-                "Authorization":
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMzM0NTM5MiwianRpIjoiNGJkNjFkMWYtNWFmNy00YmRiLWE0YjItYThhOTc3ZDM1NGRhIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiI1YTE2MDFhZTc5NWE0NDYzOWY3MTVlNDc0MDdlZWRkMiIsIm5iZiI6MTcxMzM0NTM5MiwiZXhwIjoxNzI4ODk3MzkyLCJ1aWQiOiI2NWNiOGZkNzFlMjllYTNiNGZlZmY0NDMiLCJ1cGxhdGZvcm0iOiJwYyIsInJvbGVzIjpbInVuYXV0aGVkX3VzZXIiXX0.H26sLOvAIdcRMjr_Yds_WQhcBBHuVrsRzLIshT2-_Kg"
-              }) // 替换YOUR_TOKEN为实际的token
+      // 注意：以下代码仅为示例，您需要根据实际情况构建请求
+      final response = await dio.post(
+        'http://okgo.pro:8000/v1/chat/completions',
+        data: {
+          "model": currentTab.toLowerCase(), // 使用当前标签作为模型
+          "messages": [
+            {"role": "user", "content": query}
+          ],
+          "stream": false
+        },
+        options: Options(headers: {
+          "Authorization":
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMzM0NTM5MiwianRpIjoiNGJkNjFkMWYtNWFmNy00YmRiLWE0YjItYThhOTc3ZDM1NGRhIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiI1YTE2MDFhZTc5NWE0NDYzOWY3MTVlNDc0MDdlZWRkMiIsIm5iZiI6MTcxMzM0NTM5MiwiZXhwIjoxNzI4ODk3MzkyLCJ1aWQiOiI2NWNiOGZkNzFlMjllYTNiNGZlZmY0NDMiLCJ1cGxhdGZvcm0iOiJwYyIsInJvbGVzIjpbInVuYXV0aGVkX3VzZXIiXX0.H26sLOvAIdcRMjr_Yds_WQhcBBHuVrsRzLIshT2-_Kg"
+        }),
+      );
 
-              );
-
-      // 添加用户消息到消息列表
+      // 添加用户消息到对应标签页的消息列表
       setState(() {
-        messages.add({'role': 'user', 'content': _searchController.text});
+        messagesMap[currentTab]!.add({'role': 'user', 'content': query});
       });
 
       // 清空搜索框
       _searchController.clear();
 
-      // 假设我们得到了一个响应消息
-      // 这里应该处理真实的响应数据
-      // 为了示例，我们直接添加一个模拟的系统消息
-      // Future.delayed(Duration(seconds: 1), () {
-      //   setState(() {
-      //     messages.add({
-      //       'role': 'assistant',
-      //       'content': 'This is a response from the system.'
-      //     });
-      //   });
-      // });
-      // 添加接口想消息到消息列表
+      // 添加接口响应消息到对应标签页的消息列表
       setState(() {
-        messages.add({
+        // 假设我们得到了一个响应消息
+        messagesMap[currentTab]!.add({
           'role': 'assistant',
           'content': response.data['choices'][0]['message']['content']
         });
       });
+      print("_searchGML:"+response.data.toString());
+
+    }
+  }
+
+  void _searchGPT(String currentTab) async {
+    // 获取用户输入的内容
+    String query = _searchController.text.trim();
+
+    // 检查输入是否为空
+    if (query.isNotEmpty) {
+      // 模拟搜索逻辑，使用dio发送网络请求
+      // 请自行处理token和dio初始化
+      final dio = Dio();
+      // 注意：以下代码仅为示例，您需要根据实际情况构建请求
+      final response = await dio.post(
+        'https://api.chatanywhere.tech/v1/chat/completions',
+        data: {
+          "messages": [
+            {"role": "user", "content": query}
+          ],
+          "temperature": 0.7,
+          "stream": false
+        },
+        options: Options(headers: {
+          "Authorization":
+          "Bearer sk-fBAAi7ptJU3h839fNIl2SOBHQprJ5IYZ373cS1M178bqzlnF"
+        }),
+      );
+
+      // 添加用户消息到对应标签页的消息列表
+      setState(() {
+        messagesMap[currentTab]!.add({'role': 'user', 'content': query});
+      });
+
+      // 清空搜索框
+      _searchController.clear();
+
+      // 添加接口响应消息到对应标签页的消息列表
+      setState(() {
+        // 假设我们得到了一个响应消息
+        messagesMap[currentTab]!.add({
+          'role': 'assistant',
+          'content': response.data['choices'][0]['message']['content']
+        });
+      });
+      print("_searchGPT:"+response.data.toString());
+
     }
   }
 
@@ -120,12 +159,18 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildMessageList() {
+  Widget _buildMessageList(String currentTab) {
     return Expanded(
       child: ListView.builder(
-        itemCount: messages.length,
+        itemCount: messagesMap[currentTab]!.length,
         itemBuilder: (context, index) {
-          return _buildMessageItem(messages[index]);
+          // 假设 messagesMap[currentTab] 是一个包含消息字典的列表
+          // 我们可以直接使用消息字典中的 'content' 键来构建 ListTile
+          Map<String, dynamic> message = messagesMap[currentTab]![index];
+          return ListTile(
+            title: Text(message['content']),
+            leading: message['role'] == 'user' ? Icon(Icons.person) : Icon(Icons.computer),
+          );
         },
       ),
     );
@@ -151,7 +196,7 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
           child: Center(
             child: Column(
               children: [
-                _buildMessageList(),
+                _buildMessageList(tab),
                 // 输入框和发送按钮
                 Row(
                   children: [
@@ -160,7 +205,7 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
                       icon: Icon(Icons.delete_outline),
                       onPressed: () {
                         setState(() {
-                          messages.clear();
+                          messagesMap[tab]!.clear();
                         });
                       },
                     ),
@@ -173,7 +218,11 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
                           border: InputBorder.none,
                         ),
                         onFieldSubmitted: (value) {
-                          _search();
+                          if (tab == 'ChatGPT') {
+                            _searchGPT(tab);
+                          } else {
+                            _search(tab);
+                          }
                         },
                       ),
                     ),
@@ -181,7 +230,11 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
                     IconButton(
                       icon: Icon(Icons.send),
                       onPressed: () {
-                        _search();
+                        if (tab == 'ChatGPT') {
+                          _searchGPT(tab);
+                        } else {
+                          _search(tab);
+                        }
                       },
                     ),
                   ],
@@ -213,13 +266,17 @@ class _SearchState extends State<ChatSearch> with SingleTickerProviderStateMixin
                 border: InputBorder.none,
               ),
               onFieldSubmitted: (value) {
-                _search();
+                _search(tabs.first);
+                _searchGPT(tabs[1].toString());
               },
             ),
           ),
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: _search,
+            onPressed: () {
+              _search(tabs.first);
+              _searchGPT(tabs[1].toString());
+            },
           ),
         ],
       ),

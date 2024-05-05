@@ -68,12 +68,12 @@ class _AppMainState extends State<AppMain>
       'body': const Home(),
     },
     {
-      'title': '热门',
+      'title': '朋友圈',
       'icon': Icons.whatshot,
       'body': const Hot(),
     },
     {
-      'title': '搜索',
+      'title': '问AI',
       'icon': Icons.search,
       'body': ChatSearch(),
     },
