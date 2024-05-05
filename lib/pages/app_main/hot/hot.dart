@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../utils/index.dart';
-// 导入需要的包
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import '../search/components/aaa.dart';
-import './components/info_page.dart';
+import './components/editor_page.dart';
+import 'components/info_page.dart';
 
 class Hot extends StatefulWidget {
   const Hot({Key? key, this.params}) : super(key: key);
@@ -25,14 +22,43 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
     LogUtil.d(widget.params);
   }
 
+  // 新增方法用于清除Shared Preferences
+  Future<void> _clearSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear(); // 清除所有的键值对
+  }
+
   @override
   void dispose() {
     super.dispose();
+    _clearSharedPreferences(); // 添加此行代码来清除Shared Preferences
+
   }
 
   // 跳转到编辑页面
   void _navToEditor() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const EditorPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const EditorPage()));
+  }
+
+  // 提取方法以获取发布内容
+  Future<Object> _fetchPublishedContent() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('publishedContent') ?? '';
+  }
+
+// 提取方法以构建内容列表项
+  ListTile _buildContentListTile(String content) {
+    return ListTile(
+      title: Text(content),
+      onTap: () {
+        // 跳转到新页面，传递内容数据
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => InfoPage(content: content)));
+      },
+    );
   }
 
   @override
@@ -42,28 +68,43 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
       appBar: AppBar(
         title: const Text('hot页面'),
         automaticallyImplyLeading: false,
-        actions: <Widget>[
-          // 添加一个照相机按钮
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: null,
+          ),
+          IconButton(
+            icon: const Icon(Icons.notifications_none_sharp),
+            onPressed: null,
+          ),
+// 添加一个照相机按钮
           IconButton(
             icon: const Icon(Icons.camera_alt),
             onPressed: _navToEditor,
           ),
         ],
       ),
-      body: ListView(
-        children: List.generate(1, (index) {
-          return  Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Text(
-                //   'hot页面',
-                //   style: TextStyle(fontSize: 32),
-                // ),
-              ],
-            ),
-          );
-        }),
+      body:  FutureBuilder(
+        future: _fetchPublishedContent(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); // 显示加载指示器
+          } else if (snapshot.hasData && snapshot.data != null&&snapshot.data!='') {
+            final contentList = snapshot.data as List<String>;
+            return ListView.builder(
+              itemCount: contentList.length,
+              itemBuilder: (context, index) {
+                final content = contentList[index];
+                return _buildContentListTile(content);
+              },
+            );
+          } else {
+            return Container(
+              padding: const EdgeInsets.all(2.0),
+              child: const Text('暂无发布内容'),
+            );
+          }
+        },
       ),
     );
   }

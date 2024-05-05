@@ -71,7 +71,7 @@ class _AppMainState extends State<AppMain>
     {
       'title': '朋友圈',
       'icon': Icons.whatshot,
-      'body':  Hot(),
+      'body': const Hot(),
     },
     {
       'title': '问AI',
