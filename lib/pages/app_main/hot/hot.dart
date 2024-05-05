@@ -4,6 +4,7 @@ import '../../../utils/index.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../search/components/aaa.dart';
 import './components/info_page.dart';
 
 class Hot extends StatefulWidget {
@@ -51,14 +52,14 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
       ),
       body: ListView(
         children: List.generate(1, (index) {
-          return const Center(
+          return  Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'hot页面',
-                  style: TextStyle(fontSize: 32),
-                ),
+                // Text(
+                //   'hot页面',
+                //   style: TextStyle(fontSize: 32),
+                // ),
               ],
             ),
           );

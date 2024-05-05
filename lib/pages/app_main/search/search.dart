@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flexible/pages/app_main/search/components/a.dart';
-import './components/aa.dart';
+import './components/aaa.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -53,7 +53,7 @@ class _SearchState extends State<Search> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Text('搜索内容'),
-            ChatSearch()
+            AIChatSearch(),
           ],
         ),
       ),

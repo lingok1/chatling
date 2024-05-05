@@ -26,7 +26,7 @@ class AppConfig {
   static const showJhDebugBtn = true;
 
   /// 是否开启更新app
-  static const isUpdateApp = true;
+  static const isUpdateApp = false;
 
   /// dio请求前缀
   static String host = appEnv.baseUrl;

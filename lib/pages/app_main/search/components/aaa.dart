@@ -10,17 +10,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search Example',
-      home: ChatSearch(),
+      home: AIChatSearch(),
     );
   }
 }
 
-class ChatSearch extends StatefulWidget {
+class AIChatSearch extends StatefulWidget {
   @override
   _ChatSearchState createState() => _ChatSearchState();
 }
 
-class _ChatSearchState extends State<ChatSearch> with SingleTickerProviderStateMixin {
+class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final List<String> tabs = ['GLM', 'ChatGPT', 'Qwen', 'Kimi', 'Spark', 'qwen'];
   late TabController _tabController;
@@ -164,12 +164,24 @@ class _ChatSearchState extends State<ChatSearch> with SingleTickerProviderStateM
       child: ListView.builder(
         itemCount: messagesMap[currentTab]!.length,
         itemBuilder: (context, index) {
-          // 假设 messagesMap[currentTab] 是一个包含消息字典的列表
-          // 我们可以直接使用消息字典中的 'content' 键来构建 ListTile
           Map<String, dynamic> message = messagesMap[currentTab]![index];
-          return ListTile(
-            title: Text(message['content']),
-            leading: message['role'] == 'user' ? Icon(Icons.person) : Icon(Icons.computer),
+          // 为用户和助手的消息添加不同的背景颜色
+          Color? backgroundColor = message['role'] == 'user' ? Colors.grey[200] : Colors.blue[100];
+
+          // 为消息容器添加圆角和线边框
+          BoxDecoration decoration = BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12.0), // 设置圆角大小
+            border: Border.all(color: Colors.grey, width: 1.0), // 设置线边框颜色和宽度
+          );
+
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            decoration: decoration,
+            child: ListTile(
+              title: Text(message['content']),
+              leading: message['role'] == 'user' ? Icon(Icons.person) : Icon(Icons.computer),
+            ),
           );
         },
       ),

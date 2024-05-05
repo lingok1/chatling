@@ -2,6 +2,7 @@ import 'package:ana_page_loop/ana_page_loop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_flexible/pages/app_main/search/components/aa.dart';
+import 'package:flutter_flexible/pages/app_main/search/components/aaa.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jh_debug/jh_debug.dart';
 import 'package:provider/provider.dart';
@@ -70,12 +71,12 @@ class _AppMainState extends State<AppMain>
     {
       'title': '朋友圈',
       'icon': Icons.whatshot,
-      'body': const Hot(),
+      'body':  Hot(),
     },
     {
       'title': '问AI',
       'icon': Icons.search,
-      'body': ChatSearch(),
+      'body':  AIChatSearch(),
     },
     {
       'title': '我的',
