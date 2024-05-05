@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flexible/pages/app_main/hot/hot.dart';
-import 'package:flutter_flexible/pages/app_main/search/components/tabs_page.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +9,7 @@ class EditorPage extends StatefulWidget {
   const EditorPage({Key? key}) : super(key: key);
 
   @override
-  _EditorPageState createState() => _EditorPageState();
+  createState() => _EditorPageState();
 }
 
 class _EditorPageState extends State<EditorPage> {
@@ -99,7 +97,7 @@ class _EditorPageState extends State<EditorPage> {
                 ),
                 // 显示选择的图片
                 if (_imageFiles != null)
-                  Container(
+                  SizedBox(
                     height: 100,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,

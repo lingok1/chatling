@@ -69,12 +69,12 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
         title: const Text('hot页面'),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
+          const IconButton(
+            icon: Icon(Icons.search),
             onPressed: null,
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_none_sharp),
+          const IconButton(
+            icon: Icon(Icons.notifications_none_sharp),
             onPressed: null,
           ),
 // 添加一个照相机按钮
