@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flexible/pages/app_main/hot/hot.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../components/prompt.dart';
 
 class EditorPage extends StatefulWidget {
   const EditorPage({Key? key}) : super(key: key);
@@ -17,6 +19,8 @@ class _EditorPageState extends State<EditorPage> {
   final ImagePicker _picker = ImagePicker();
   List<XFile>? _imageFiles;
   List<String> content = [];
+  static Dio dio = Dio();
+  final chatService = ChatService(dio);
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -32,8 +36,9 @@ class _EditorPageState extends State<EditorPage> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Hot()));
   }
 
-  void _onPublishPressed() {
+  Future<void> _onPublishPressed() async {
    //为空判断
+
     if (_textEditingController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('内容不能为空')));
       return;
@@ -55,7 +60,23 @@ class _EditorPageState extends State<EditorPage> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('发布成功')));
+    //评论
+    String prompt = "现在你是财神爷，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字。";
+    String currentTab = _textEditingController.text;
+
+    String prompt2 = "现在你是道格拉斯·麦克阿瑟，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字。";
+    String currentTab2 = _textEditingController.text;
+    // 页面跳转
     _onHotPagePressed();
+    try {
+      String aiResponse = await chatService.sendMessage(prompt, currentTab);
+      print(aiResponse);
+      String aiResponse2 = await chatService.sendMessage(prompt2, currentTab2);
+      print(aiResponse2);
+    } catch (e) {
+      print('Error: $e');
+    }
+
   }
 
   @override
