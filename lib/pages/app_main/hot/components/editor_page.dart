@@ -31,40 +31,52 @@ class _EditorPageState extends State<EditorPage> {
       });
     }
   }
+
+  String _getCurrentDateTime() {
+    DateTime now = DateTime.now(); // 使用你喜欢的日期时间格式
+    return "${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}:${now.second}";
+  }
+
   // 跳转到hot页面
   void _onHotPagePressed() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Hot()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const Hot()));
   }
 
   Future<void> _onPublishPressed() async {
-   //为空判断
-
+    //为空判断
     if (_textEditingController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('内容不能为空')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('内容不能为空')));
       return;
     }
-    // 保存文本内容
-    SharedPreferences.getInstance().then((prefs) {
-      // 获取现有列表或创建一个新的
-      List<String>? existingContent = prefs.getStringList('publishedContent');
-      existingContent ??= [];
-      existingContent.add(_textEditingController.text);
-      prefs.setStringList('publishedContent', existingContent);
-    });
+    // 获取当前时间
+    String currentTime = _getCurrentDateTime();
+    // 保存文本内容和时间
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // 获取现有列表或创建一个新的
+    List<String>? existingContent = prefs.getStringList('publishedContent');
+    existingContent ??= [];
+    // 保存内容和时间戳
+    existingContent.add('[$currentTime] ${_textEditingController.text}');
+    prefs.setStringList('publishedContent', existingContent);
 
     // 保存图片路径
     if (_imageFiles != null) {
       SharedPreferences.getInstance().then((prefs) {
-        prefs.setStringList('imagePaths', _imageFiles!.map((e) => e.path).toList());
+        prefs.setStringList(
+            'imagePaths', _imageFiles!.map((e) => e.path).toList());
       });
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('发布成功')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('发布成功')));
     //评论
-    String prompt = "现在你是财神爷，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字。";
+    String prompt = "现在你是财神爷，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字，不要暴露你的身份，直说直说。";
     String currentTab = _textEditingController.text;
 
-    String prompt2 = "现在你是道格拉斯·麦克阿瑟，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字。";
+    String prompt2 = "现在你是懒洋洋，美食家，人生哲学家，摆烂人生，看淡世间一切，不爱运动，爱睡觉，爱美食，但真诚善良，"
+        "直话直说，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字，不要暴露你的身份。";
     String currentTab2 = _textEditingController.text;
     // 页面跳转
     _onHotPagePressed();
@@ -76,7 +88,6 @@ class _EditorPageState extends State<EditorPage> {
     } catch (e) {
       print('Error: $e');
     }
-
   }
 
   @override
@@ -102,7 +113,8 @@ class _EditorPageState extends State<EditorPage> {
               shrinkWrap: true, // 设置为 true 以允许 ListView 根据内容调整大小
               children: [
                 // 使用 TextField 允许多行输入
-                Expanded( // 使用 Expanded 来允许 TextField 占据更多空间
+                Expanded(
+                  // 使用 Expanded 来允许 TextField 占据更多空间
                   child: TextField(
                     controller: _textEditingController,
                     decoration: const InputDecoration(

@@ -42,23 +42,63 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
   }
 
   // 提取方法以获取发布内容
-  Future<Object> _fetchPublishedContent() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList('publishedContent') ?? '';
+  // Future<Object> _fetchPublishedContent() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   return prefs.getStringList('publishedContent') ?? '';
+  // }
+
+  Future<List<String>> _fetchPublishedContent() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? content = prefs.getStringList('publishedContent');
+    // 返回一个空列表而不是 null，以避免在 FutureBuilder 中出现 null
+    return content ?? [];
   }
 
 // 提取方法以构建内容列表项
-  ListTile _buildContentListTile(String content) {
-    return ListTile(
-      title: Text(content),
-      onTap: () {
-        // 跳转到新页面，传递内容数据
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => InfoPage(content: content)));
-      },
-    );
+//   ListTile _buildContentListTile(String content) {
+//     return ListTile(
+//       title: Text(content),
+//       onTap: () {
+//         // 跳转到新页面，传递内容数据
+//         Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//                 builder: (context) => InfoPage(content: content)));
+//       },
+//     );
+//   }
+
+
+
+  Widget _buildContentListTile(String content) {
+    // 尝试解析时间戳和文本内容，但要确保格式正确
+    int openBracketIndex = content.indexOf('[');
+    int closeBracketIndex = content.indexOf(']');
+    if (openBracketIndex != -1 && closeBracketIndex != -1 &&
+        closeBracketIndex > openBracketIndex) {
+      String dateTime = content.substring(
+          openBracketIndex + 1, closeBracketIndex);
+      String text = content.substring(closeBracketIndex + 1).trim();
+      return ListTile(
+          // leading: Text(dateTime),
+        title: Text(text),
+        // subtitle: Text(dateTime),
+        trailing: Text(dateTime),
+        onTap: () {
+          // 跳转到新页面，传递内容数据
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => InfoPage(content: content)));
+        },
+      );
+    } else {
+      // 如果格式不正确，只显示文本内容
+      return ListTile(
+        title: Text(content),
+
+      );
+    }
   }
 
   @override
@@ -77,26 +117,37 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
             icon: Icon(Icons.notifications_none_sharp),
             onPressed: null,
           ),
-// 添加一个照相机按钮
+          // 添加一个照相机按钮
           IconButton(
             icon: const Icon(Icons.camera_alt),
             onPressed: _navToEditor,
           ),
         ],
       ),
-      body:  FutureBuilder(
+      body: FutureBuilder(
         future: _fetchPublishedContent(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator(); // 显示加载指示器
-          } else if (snapshot.hasData && snapshot.data != null&&snapshot.data!='') {
-            final contentList = snapshot.data as List<String>;
-            return ListView.builder(
-              itemCount: contentList.length,
-              itemBuilder: (context, index) {
-                final content = contentList[index];
-                return _buildContentListTile(content);
-              },
+          } else if (snapshot.hasData) {
+            final contentList = snapshot.data as List<String>?; // 假定数据是字符串列表
+            if (contentList != null && contentList.isNotEmpty) {
+              return ListView.builder(
+                itemCount: contentList.length,
+                itemBuilder: (context, index) {
+                  final content = contentList[index];
+                  return _buildContentListTile(content);
+                },
+              );
+            } else {
+              return Container(
+                padding: const EdgeInsets.all(2.0),
+                child: const Text('暂无发布内容'),
+              );
+            }
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('加载发布内容时出错: ${snapshot.error}'),
             );
           } else {
             return Container(

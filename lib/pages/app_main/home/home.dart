@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/update_app/check_app_version.dart';
 import '../../../routes/route_name.dart';
 import '../../../config/app_env.dart' show appEnv;
@@ -19,6 +20,17 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   late CounterStore _counter;
   FocusNode blankNode = FocusNode(); // 响应空白处的焦点的Node
+
+  @override
+  void initState() {
+    super.initState();
+    // _clearSharedPreferences();
+  }
+  // 新增方法用于清除Shared Preferences
+  Future<void> _clearSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear(); // 清除所有的键值对
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +85,12 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
               '强制更新App',
               onPressed: () {
                 checkAppVersion(forceUpdate: true);
+              },
+            ),
+            _button(
+              '删除全部朋友圈记录',
+              onPressed: () {
+                _clearSharedPreferences();
               },
             ),
           ],
