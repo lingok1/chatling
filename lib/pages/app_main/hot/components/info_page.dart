@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'ToggleIconButton.dart';
+
 class InfoPage extends StatelessWidget {
   final String content;
   final bool isFilled; // 初始状态，是否为实心
@@ -94,11 +96,17 @@ class InfoPage extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _heart(),
-                IconButton(
-                  icon: const Icon(Icons.thumb_down),
-                  onPressed: () {},
+                ToggleIconButton(
+                  icon: Icons.favorite,
+                  onChanged: (isActive) {
+                    print('Icon button is active: $isActive');
+                  },
                 ),
+                // _heart(),
+                // IconButton(
+                //   icon: const Icon(Icons.thumb_down),
+                //   onPressed: () {},
+                // ),
                 IconButton(
                   icon: const Icon(Icons.more_vert),
                   onPressed: () {},
