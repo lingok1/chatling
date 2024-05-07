@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../utils/index.dart';
 import './components/editor_page.dart';
@@ -32,7 +33,6 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
   void dispose() {
     super.dispose();
     _clearSharedPreferences(); // 添加此行代码来清除Shared Preferences
-
   }
 
   // 跳转到编辑页面
@@ -41,12 +41,6 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
         context, MaterialPageRoute(builder: (context) => const EditorPage()));
   }
 
-  // 提取方法以获取发布内容
-  // Future<Object> _fetchPublishedContent() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getStringList('publishedContent') ?? '';
-  // }
-
   Future<List<String>> _fetchPublishedContent() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? content = prefs.getStringList('publishedContent');
@@ -54,33 +48,18 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
     return content ?? [];
   }
 
-// 提取方法以构建内容列表项
-//   ListTile _buildContentListTile(String content) {
-//     return ListTile(
-//       title: Text(content),
-//       onTap: () {
-//         // 跳转到新页面，传递内容数据
-//         Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//                 builder: (context) => InfoPage(content: content)));
-//       },
-//     );
-//   }
-
-
-
   Widget _buildContentListTile(String content) {
     // 尝试解析时间戳和文本内容，但要确保格式正确
     int openBracketIndex = content.indexOf('[');
     int closeBracketIndex = content.indexOf(']');
-    if (openBracketIndex != -1 && closeBracketIndex != -1 &&
+    if (openBracketIndex != -1 &&
+        closeBracketIndex != -1 &&
         closeBracketIndex > openBracketIndex) {
-      String dateTime = content.substring(
-          openBracketIndex + 1, closeBracketIndex);
+      String dateTime =
+          content.substring(openBracketIndex + 1, closeBracketIndex);
       String text = content.substring(closeBracketIndex + 1).trim();
       return ListTile(
-          // leading: Text(dateTime),
+        // leading: Text(dateTime),
         title: Text(text),
         // subtitle: Text(dateTime),
         trailing: Text(dateTime),
@@ -96,7 +75,6 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
       // 如果格式不正确，只显示文本内容
       return ListTile(
         title: Text(content),
-
       );
     }
   }
@@ -109,14 +87,12 @@ class _HotState extends State<Hot> with AutomaticKeepAliveClientMixin {
         title: const Text('hot页面'),
         automaticallyImplyLeading: false,
         actions: [
-          const IconButton(
-            icon: Icon(Icons.search),
-            onPressed: null,
-          ),
-          const IconButton(
-            icon: Icon(Icons.notifications_none_sharp),
-            onPressed: null,
-          ),
+          IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => GFToast.showToast("111", context)),
+          IconButton(
+              icon: Icon(Icons.notifications_none_sharp),
+              onPressed: () => GFToast.showToast("222", context)),
           // 添加一个照相机按钮
           IconButton(
             icon: const Icon(Icons.camera_alt),

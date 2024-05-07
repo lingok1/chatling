@@ -72,11 +72,11 @@ class _EditorPageState extends State<EditorPage> {
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('发布成功')));
     //评论
-    String prompt = "现在你是财神爷，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字，不要暴露你的身份，直说直说。";
+    String prompt = "我们来玩角色扮演，现在你是财神爷，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字，不要暴露你的身份，直说直说。";
     String currentTab = _textEditingController.text;
 
-    String prompt2 = "现在你是懒洋洋，美食家，人生哲学家，摆烂人生，看淡世间一切，不爱运动，爱睡觉，爱美食，但真诚善良，"
-        "直话直说，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字，不要暴露你的身份。";
+    String prompt2 = "我们来玩角色扮演，现在你是懒洋洋，美食家，人生哲学家，摆烂人生，看淡世间一切，不爱运动，爱睡觉，爱美食，但真诚善良，"
+        "直话直说，你的朋友发布了一条朋友圈,请你做出评论，简短点不要超过20字，不要暴露你的身份和性格，说话要委婉。";
     String currentTab2 = _textEditingController.text;
     // 页面跳转
     _onHotPagePressed();

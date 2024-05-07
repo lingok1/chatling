@@ -17,12 +17,12 @@ class MyApp extends StatelessWidget {
 
 class AIChatSearch extends StatefulWidget {
   @override
-  _ChatSearchState createState() => _ChatSearchState();
+   createState() => _ChatSearchState();
 }
 
 class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> tabs = ['GLM', 'ChatGPT', 'Qwen', 'Kimi', 'Spark', 'qwen'];
+  final List<String> tabs = ['GLM', 'ChatGPT', 'Qwen', 'Kimi', 'Spark', 'Hailuo'];
   late TabController _tabController;
   // 使用映射来存储每个标签页的消息列表
   final Map<String, List<Map<String, dynamic>>> messagesMap = {};
@@ -49,6 +49,8 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
 
     // 检查输入是否为空
     if (query.isNotEmpty) {
+      // 清空搜索框
+      _searchController.clear();
       // 模拟搜索逻辑，使用dio发送网络请求
       // 请自行处理token和dio初始化
       final dio = Dio();
@@ -73,9 +75,6 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
         messagesMap[currentTab]!.add({'role': 'user', 'content': query});
       });
 
-      // 清空搜索框
-      _searchController.clear();
-
       // 添加接口响应消息到对应标签页的消息列表
       setState(() {
         // 假设我们得到了一个响应消息
@@ -84,7 +83,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
           'content': response.data['choices'][0]['message']['content']
         });
       });
-      print("_searchGML:"+response.data.toString());
+      print("_searchGML:${response.data}");
 
     }
   }
@@ -95,6 +94,8 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
 
     // 检查输入是否为空
     if (query.isNotEmpty) {
+      // 清空搜索框
+      _searchController.clear();
       // 模拟搜索逻辑，使用dio发送网络请求
       // 请自行处理token和dio初始化
       final dio = Dio();
@@ -119,9 +120,6 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
         messagesMap[currentTab]!.add({'role': 'user', 'content': query});
       });
 
-      // 清空搜索框
-      _searchController.clear();
-
       // 添加接口响应消息到对应标签页的消息列表
       setState(() {
         // 假设我们得到了一个响应消息
@@ -130,33 +128,9 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
           'content': response.data['choices'][0]['message']['content']
         });
       });
-      print("_searchGPT:"+response.data.toString());
+      print("_searchGPT:${response.data}");
 
     }
-  }
-
-  Widget _buildMessageItem(Map<String, dynamic> message) {
-    // 根据消息的角色显示不同的图标
-    Widget icon;
-    if (message['role'] == 'user') {
-      icon = Icon(Icons.person);
-    } else if (message['role'] == 'assistant') {
-      icon = Icon(Icons.computer);
-    } else {
-      icon = SizedBox.shrink(); // 如果没有角色，不显示图标
-    }
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        icon,
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Text(message['content']),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildMessageList(String currentTab) {
@@ -176,11 +150,11 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
           );
 
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             decoration: decoration,
             child: ListTile(
               title: Text(message['content']),
-              leading: message['role'] == 'user' ? Icon(Icons.person) : Icon(Icons.computer),
+              leading: message['role'] == 'user' ? const Icon(Icons.person) : const Icon(Icons.computer),
             ),
           );
         },
@@ -193,7 +167,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
       controller: _tabController,
       tabs: tabs.map((tab) => Tab(text: tab)).toList(),
       isScrollable: true,
-      labelPadding: EdgeInsets.only(left: 12.0),
+      labelPadding: const EdgeInsets.only(left: 12.0),
       labelColor: Colors.blue,
       unselectedLabelColor: Colors.black,
     );
@@ -214,7 +188,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
                   children: [
                     // 清空按钮
                     IconButton(
-                      icon: Icon(Icons.delete_outline),
+                      icon: const Icon(Icons.delete_outline),
                       onPressed: () {
                         setState(() {
                           messagesMap[tab]!.clear();
@@ -225,7 +199,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
                     Expanded(
                       child: TextFormField(
                         controller: _searchController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '请输入搜索内容',
                           border: InputBorder.none,
                         ),
@@ -240,7 +214,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
                     ),
                     // 发送按钮
                     IconButton(
-                      icon: Icon(Icons.send),
+                      icon: const Icon(Icons.send),
                       onPressed: () {
                         if (tab == 'ChatGPT') {
                           _searchGPT(tab);
@@ -265,7 +239,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
       appBar: AppBar(
         title: const Text('Search页面'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(kTextTabBarHeight),
+          preferredSize: const Size.fromHeight(kTextTabBarHeight),
           child: _buildTabBar(),
         ),
         automaticallyImplyLeading: false,
@@ -273,7 +247,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
           Expanded(
             child: TextFormField(
               controller: _searchController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '请输入搜索内容',
                 border: InputBorder.none,
               ),
@@ -284,7 +258,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
             ),
           ),
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               _search(tabs.first);
               _searchGPT(tabs[1].toString());
