@@ -17,4 +17,7 @@ class RouteName {
 
   /// 注册页
   static String register = '/register';
+
+  /// 今日热榜
+  static String hotListPage = '/hotListPage';
 }
