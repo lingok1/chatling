@@ -18,5 +18,5 @@ final Map<String,
   RouteName.error: (context, {params}) => ErrorPage(params: params),
   RouteName.testDemo: (context, {params}) => TestDemo(params: params),
   RouteName.login: (context, {params}) => Login(params: params),
-  // RouteName.hotListPage: (context, {params}) => HotListPage(),
+  // RouteName.hotListPage: (context, {params}) => HotListPage(params: params),
 };

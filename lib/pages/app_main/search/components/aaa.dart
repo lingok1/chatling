@@ -49,8 +49,7 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
 
     // 检查输入是否为空
     if (query.isNotEmpty) {
-      // 清空搜索框
-      _searchController.clear();
+
       // 模拟搜索逻辑，使用dio发送网络请求
       // 请自行处理token和dio初始化
       final dio = Dio();
@@ -74,7 +73,190 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
       setState(() {
         messagesMap[currentTab]!.add({'role': 'user', 'content': query});
       });
+      // 清空搜索框
+      _searchController.clear();
+      // 添加接口响应消息到对应标签页的消息列表
+      setState(() {
+        // 假设我们得到了一个响应消息
+        messagesMap[currentTab]!.add({
+          'role': 'assistant',
+          'content': response.data['choices'][0]['message']['content']
+        });
+      });
+      print("_searchGML:${response.data}");
 
+    }
+  }
+
+  void _searchKimi(String currentTab) async {
+    // 获取用户输入的内容
+    String query = _searchController.text.trim();
+
+    // 检查输入是否为空
+    if (query.isNotEmpty) {
+
+      // 模拟搜索逻辑，使用dio发送网络请求
+      // 请自行处理token和dio初始化
+      final dio = Dio();
+      // 注意：以下代码仅为示例，您需要根据实际情况构建请求
+      final response = await dio.post(
+        'http://okgo.pro:8001/v1/chat/completions',
+        data: {
+          "model": currentTab.toLowerCase(), // 使用当前标签作为模型
+          "messages": [
+            {"role": "user", "content": query}
+          ],
+          "stream": false
+        },
+        options: Options(headers: {
+          "Authorization":
+          "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ1c2VyLWNlbnRlciIsImV4cCI6MTcyMjk0NDQzOCwiaWF0IjoxNzE1MTY4NDM4LCJqdGkiOiJjb3RtOWRpdWw3MjI3dHJyYW5vZyIsInR5cCI6InJlZnJlc2giLCJzdWIiOiJjbjUzNm1nM3IwN2FyZGljaGxvMCIsInNwYWNlX2lkIjoiY241MzZtZzNyMDdhcmRpY2hsbmciLCJhYnN0cmFjdF91c2VyX2lkIjoiY241MzZtZzNyMDdhcmRpY2hsbjAifQ.eeHiu5GpTdTAPrpYjx-QKr7SValVrbi6TiJtrTt1Fdmjv6oE1rs1ZMeI2ava8SxYhG7rFnE076t4WLNykUJsAg"
+        }),
+      );
+
+      // 添加用户消息到对应标签页的消息列表
+      setState(() {
+        messagesMap[currentTab]!.add({'role': 'user', 'content': query});
+      });
+      // 清空搜索框
+      _searchController.clear();
+      // 添加接口响应消息到对应标签页的消息列表
+      setState(() {
+        // 假设我们得到了一个响应消息
+        messagesMap[currentTab]!.add({
+          'role': 'assistant',
+          'content': response.data['choices'][0]['message']['content']
+        });
+      });
+      print("_searchGML:${response.data}");
+
+    }
+  }
+
+  void _searchQwen(String currentTab) async {
+    // 获取用户输入的内容
+    String query = _searchController.text.trim();
+
+    // 检查输入是否为空
+    if (query.isNotEmpty) {
+
+      // 模拟搜索逻辑，使用dio发送网络请求
+      // 请自行处理token和dio初始化
+      final dio = Dio();
+      // 注意：以下代码仅为示例，您需要根据实际情况构建请求
+      final response = await dio.post(
+        'http://okgo.pro:8002/v1/chat/completions',
+        data: {
+          "model": currentTab.toLowerCase(), // 使用当前标签作为模型
+          "messages": [
+            {"role": "user", "content": query}
+          ],
+          "stream": false
+        },
+        options: Options(headers: {
+          "Authorization":
+          "Bearer 0WmQLT8ZqpuGHwSl9ObH4*7INHqNlCJQZcHlO8ixLpHrMXUaIrrMUaL5WA5msOWQ0"
+        }),
+      );
+
+      // 添加用户消息到对应标签页的消息列表
+      setState(() {
+        messagesMap[currentTab]!.add({'role': 'user', 'content': query});
+      });
+      // 清空搜索框
+      _searchController.clear();
+      // 添加接口响应消息到对应标签页的消息列表
+      setState(() {
+        // 假设我们得到了一个响应消息
+        messagesMap[currentTab]!.add({
+          'role': 'assistant',
+          'content': response.data['choices'][0]['message']['content']
+        });
+      });
+      print("_searchGML:${response.data}");
+
+    }
+  }
+
+
+
+  void _searchSpark(String currentTab) async {
+    // 获取用户输入的内容
+    String query = _searchController.text.trim();
+
+    // 检查输入是否为空
+    if (query.isNotEmpty) {
+
+      // 模拟搜索逻辑，使用dio发送网络请求
+      // 请自行处理token和dio初始化
+      final dio = Dio();
+      // 注意：以下代码仅为示例，您需要根据实际情况构建请求
+      final response = await dio.post(
+        'http://okgo.pro:8004/v1/chat/completions',
+        data: {
+          "model": currentTab.toLowerCase(), // 使用当前标签作为模型
+          "messages": [
+            {"role": "user", "content": query}
+          ],
+          "stream": false
+        },
+        options: Options(headers: {
+          "Authorization":
+          "Bearer e6fa912d-0dfa-415d-afe4-dd0ba95a9541"
+        }),
+      );
+
+      // 添加用户消息到对应标签页的消息列表
+      setState(() {
+        messagesMap[currentTab]!.add({'role': 'user', 'content': query});
+      });
+      // 清空搜索框
+      _searchController.clear();
+      // 添加接口响应消息到对应标签页的消息列表
+      setState(() {
+        // 假设我们得到了一个响应消息
+        messagesMap[currentTab]!.add({
+          'role': 'assistant',
+          'content': response.data['choices'][0]['message']['content']
+        });
+      });
+      print("_searchGML:${response.data}");
+
+    }
+  }
+
+  void _searchHailuo(String currentTab) async {
+    // 获取用户输入的内容
+    String query = _searchController.text.trim();
+
+    // 检查输入是否为空
+    if (query.isNotEmpty) {
+
+      // 模拟搜索逻辑，使用dio发送网络请求
+      // 请自行处理token和dio初始化
+      final dio = Dio();
+      // 注意：以下代码仅为示例，您需要根据实际情况构建请求
+      final response = await dio.post(
+        'http://okgo.pro:8003/v1/chat/completions',
+        data: {
+          "model": currentTab.toLowerCase(), // 使用当前标签作为模型
+          "messages": [
+            {"role": "user", "content": query}
+          ],
+          "stream": false
+        },
+        options: Options(headers: {
+          "Authorization":
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTg2MjQ1MjAsInVzZXIiOnsiaWQiOiIyNDE1ODczNzE5ODM2OTU4NzgiLCJuYW1lIjoi5bCP6J665bi9NTg3OCIsImF2YXRhciI6Imh0dHBzOi8vY2RuLnlpbmdzaGktYWkuY29tL3Byb2QvdXNlcl9hdmF0YXIvMTcwNjI2NzcxMTI4Mjc3MDg3Mi0xNzMxOTQ1NzA2Njg5NjU4OTZvdmVyc2l6ZS5wbmciLCJkZXZpY2VJRCI6IjI0NDU3OTQzOTg0MDUzMDQzNyIsImlzQW5vbnltb3VzIjpmYWxzZX19.sh8LBOha4OeQVj46-Z9UrV95UW4vSFMe7TP_dqp169I"
+        }),
+      );
+
+      // 添加用户消息到对应标签页的消息列表
+      setState(() {
+        messagesMap[currentTab]!.add({'role': 'user', 'content': query});
+      });
+      // 清空搜索框
+      _searchController.clear();
       // 添加接口响应消息到对应标签页的消息列表
       setState(() {
         // 假设我们得到了一个响应消息
@@ -94,14 +276,13 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
 
     // 检查输入是否为空
     if (query.isNotEmpty) {
-      // 清空搜索框
-      _searchController.clear();
+
       // 模拟搜索逻辑，使用dio发送网络请求
       // 请自行处理token和dio初始化
       final dio = Dio();
       // 注意：以下代码仅为示例，您需要根据实际情况构建请求
       final response = await dio.post(
-        'https://api.chatanywhere.tech/v1/chat/completions',
+        'https://api.chatanywhere.com.cn/v1/chat/completions',
         data: {
           "messages": [
             {"role": "user", "content": query}
@@ -119,7 +300,8 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
       setState(() {
         messagesMap[currentTab]!.add({'role': 'user', 'content': query});
       });
-
+      // 清空搜索框
+      _searchController.clear();
       // 添加接口响应消息到对应标签页的消息列表
       setState(() {
         // 假设我们得到了一个响应消息
@@ -254,6 +436,10 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
               onFieldSubmitted: (value) {
                 _search(tabs.first);
                 _searchGPT(tabs[1].toString());
+                _searchQwen(tabs[2].toString());
+                _searchKimi(tabs[3].toString());
+                _searchSpark(tabs[4].toString());
+                _searchHailuo(tabs[5].toString());
               },
             ),
           ),
@@ -262,6 +448,10 @@ class _ChatSearchState extends State<AIChatSearch> with SingleTickerProviderStat
             onPressed: () {
               _search(tabs.first);
               _searchGPT(tabs[1].toString());
+              _searchQwen(tabs[2].toString());
+              _searchKimi(tabs[3].toString());
+              _searchSpark(tabs[4].toString());
+              _searchHailuo(tabs[5].toString());
             },
           ),
         ],
