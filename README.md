@@ -17,20 +17,20 @@ AI迭代发展迅猛，希望能开发出更有创意的产品，为工作学习
 </p>
 <p align="center">
   <a>
-    <img  src="./chatlingIMG/1715771374102.png" width="220"/>
-    <img  src="./chatlingIMG/1715771374102.png" width="220"/>
+    <img  src="./chatlingIMG/1715771399713.png" width="220"/>
+    <img  src="./chatlingIMG/1715771571628.png" width="220"/>
   </a>
 </p>
 <p align="center">
   <a>
-    <img  src="./chatlingIMG/1715771374102.png" width="220"/>
-    <img  src="./chatlingIMG/1715771374102.png" width="220"/>
+    <img  src="./chatlingIMG/1715771501680.png" width="220"/>
+    <img  src="./chatlingIMG/1715771522717.png" width="220"/>
   </a>
 </p>
 <p align="center">
   <a>
-    <img  src="./chatlingIMG/1715771374102.png" width="220"/>
-    <img  src="./chatlingIMG/1715771374102.png" width="220"/>
+    <img  src="./chatlingIMG/1715771611975.png" width="220"/>
+    <img  src="./chatlingIMG/1715771628821.png" width="220"/>
   </a>
 </p>
 
