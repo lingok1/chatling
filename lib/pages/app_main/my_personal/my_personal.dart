@@ -20,7 +20,7 @@ class _MyPersonalState extends State<MyPersonal>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MyPersonal页面'),
+        title: const Text('ChatLing'),
         automaticallyImplyLeading: false,
       ),
       body: Column(
